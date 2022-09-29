@@ -1,0 +1,29 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API desenvolvida para ser utilizada no módulo de consumo de API na trilha de React Native do Ignite.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run"
+  },
+  "author": "Rodrigo Gonçalves Santana",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.5",
+    "express": "^4.18.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^2.2.0",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.0.11",
+    "swagger-ui-express": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
