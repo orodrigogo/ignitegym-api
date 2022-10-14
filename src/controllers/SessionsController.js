@@ -1,8 +1,6 @@
 const knex = require("../database");
 const { compare } = require("bcryptjs");
-const { sign } = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
-const authConfig = require("../configs/auth");
 const GenerateRefreshToken = require("../providers/GenerateRefreshToken");
 const GenerateToken = require("../providers/GenerateToken");
 
@@ -10,7 +8,7 @@ class SessionsController {
   async create(request, response) {
     const { email, password } = request.body;
 
-    const user = await knex("users").where({ email }).first();
+    const user = await knex("users").where({ email: email.toLowerCase() }).first();
 
     if (!user) {
       throw new AppError("E-mail e/ou senha incorreta.", 404);
