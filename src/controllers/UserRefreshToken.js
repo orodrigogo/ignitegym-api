@@ -6,33 +6,33 @@ const dayjs = require("dayjs");
 
 class UserRefreshToken {
   async create(request, response) {
-    const { token } = request.body;
+    const { refresh_token } = request.body;
 
-    if (!token) {
+    if (!refresh_token) {
       throw new AppError("Informe o token de autenticação.", 401);
     }
 
-    const userToken = await knex("users_tokens").where({ token }).first();
+    const refreshToken = await knex("refresh_token").where({ refresh_token }).first();
 
-    if (!userToken) {
-      throw new AppError("Refresh token não encontrado para este usuário.", 404);
+    if (!refreshToken) {
+      throw new AppError("Refresh token não encontrado para este usuário.", 401);
     }
 
     const generateTokenProvider = new GenerateToken();
-    const refreshToken = await generateTokenProvider.execute(userToken.user_id);
+    const token = await generateTokenProvider.execute(refreshToken.user_id);
 
-    const refreshTokenExpired = dayjs().isAfter(dayjs.unix(userToken.expires_in));
+    const refreshTokenExpired = dayjs().isAfter(dayjs.unix(refreshToken.expires_in));
 
     if (refreshTokenExpired) {
-      await knex("users_tokens").where({ user_id: userToken.user_id }).delete();
+      await knex("refresh_token").where({ user_id: refreshToken.user_id }).delete();
 
       const generateRefreshToken = new GenerateRefreshToken();
-      await generateRefreshToken.execute(userToken.user_id, refreshToken);
+      const newRefreshToken = await generateRefreshToken.execute(refreshToken.user_id, refresh_token);
 
-      return response.json({ token: refreshToken });
+      return response.json({ token, refresh_token: newRefreshToken });
     }
 
-    return response.json({ token });
+    return response.json({ token, refresh_token });
   }
 }
 
