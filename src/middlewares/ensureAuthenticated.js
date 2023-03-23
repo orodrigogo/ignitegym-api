@@ -12,7 +12,6 @@ async function ensureAuthenticated(request, response, next) {
   const [, token] = authHeader.split(" ");
 
   try {
-
     const { sub: user_id } = verify(token, authConfig.jwt.secret);
 
     request.user = {
@@ -21,7 +20,7 @@ async function ensureAuthenticated(request, response, next) {
 
     return next();
   } catch {
-    throw new AppError("token.invalid", 401);
+    throw new AppError("token.expired", 401);
   }
 }
 
